@@ -7,8 +7,7 @@
     "build": "tsc",
     "start": "node dist/server.js",
     "dev": "ts-node-dev --respawn --transpile-only src/server.ts",
-    "test": "jest",
-    "seed": "ts-node src/data/seed.ts"
+    "test": "cross-env NODE_ENV=test jest"
   },
   "keywords": [],
   "author": "",

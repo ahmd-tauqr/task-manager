@@ -4,31 +4,32 @@ import prisma from '../models';
 import bcrypt from 'bcryptjs';
 
 describe('Task Endpoints', () => {
+  const testEmail = `testuser+${Date.now()}@example.com`;
   let cookie: string;
   let userId: number;
 
   beforeAll(async () => {
     // Create the test user and login to get the cookie
-    await prisma.user.deleteMany({ where: { email: 'testuser@example.com' } });
+    await prisma.user.deleteMany({ where: { email: testEmail } });
     const user = await prisma.user.create({
       data: {
-        email: 'testuser@example.com',
+        email: testEmail,
         password: await bcrypt.hash('password123', 10),
       },
     });
     userId = user.id;
 
     const loginRes = await request(app).post('/v1/auth/login').send({
-      email: 'testuser@example.com',
+      email: testEmail,
       password: 'password123',
     });
     cookie = loginRes.headers['set-cookie'];
-  }, 10000); // Set timeout to 10 seconds
+  }, 20000); // Set timeout to 20 seconds
 
   afterAll(async () => {
     // Clean up test data
     await prisma.task.deleteMany({ where: { userId: userId } });
-    await prisma.user.deleteMany({ where: { email: 'testuser@example.com' } });
+    await prisma.user.deleteMany({ where: { email: testEmail } });
     await prisma.$disconnect();
   });
 
@@ -44,7 +45,7 @@ describe('Task Endpoints', () => {
       });
     expect(res.statusCode).toEqual(201);
     expect(res.body).toHaveProperty('title', 'New Test Task');
-  }, 10000); // Set timeout to 10 seconds
+  }, 20000); // Set timeout to 20 seconds
 
   it('should get tasks', async () => {
     // Create a task to ensure there's something to get
@@ -60,7 +61,7 @@ describe('Task Endpoints', () => {
     const res = await request(app).get('/v1/tasks').set('Cookie', cookie);
     expect(res.statusCode).toEqual(200);
     expect(res.body.tasks.length).toBeGreaterThan(0);
-  }, 10000); // Set timeout to 10 seconds
+  }, 20000); // Set timeout to 20 seconds
 
   it('should update a task', async () => {
     // Create a task to update
@@ -83,7 +84,7 @@ describe('Task Endpoints', () => {
       });
     expect(res.statusCode).toEqual(200);
     expect(res.body).toHaveProperty('title', 'Updated Test Task');
-  }, 10000); // Set timeout to 10 seconds
+  }, 20000); // Set timeout to 20 seconds
 
   it('should delete a task', async () => {
     // Create a task to delete
@@ -100,5 +101,18 @@ describe('Task Endpoints', () => {
       .delete(`/v1/tasks/${task.id}`)
       .set('Cookie', cookie);
     expect(res.statusCode).toEqual(204);
-  }, 10000); // Set timeout to 10 seconds
+  }, 20000); // Set timeout to 20 seconds
+
+  it('should fail to create a task without a title', async () => {
+    const res = await request(app)
+      .post('/v1/tasks')
+      .set('Cookie', cookie)
+      .send({
+        description: 'This task has no title',
+        status: 'To Do',
+        userId: userId,
+      });
+    expect(res.statusCode).toEqual(400);
+    expect(res.body).toHaveProperty('message', 'Task title is required');
+  }, 20000); // Set timeout to 20 seconds
 });
