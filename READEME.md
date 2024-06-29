@@ -1,143 +1,219 @@
-# Task Management Application
+# Task Manager Application
 
-This project is a simple task management application that allows users to create, update, and delete tasks. Tasks have a title, description, and status (e.g., "To Do," "In Progress," "Done"). Users can view a list of tasks and filter them by status. The application includes both front-end and back-end components and is structured as a monorepo.
+## Overview
 
-## Monorepo Structure
+This repository contains the source code for a task management application. The application allows users to create, update, delete, and view tasks. Users can also filter tasks by their status (e.g., "To Do," "In Progress," "Done"). The application is built as a monorepo containing both frontend and backend projects.
 
-The monorepo contains two main directories:
-- `frontend`: Contains the React application for the front-end.
-- `backend`: Contains the Node.js application for the back-end.
+## Table of Contents
 
-## Front-End
+- [Technologies Used](#technologies-used)
+- [Features](#features)
+- [Setup Instructions](#setup-instructions)
+  - [Frontend Setup](#frontend-setup)
+  - [Backend Setup](#backend-setup)
+- [Assumptions](#assumptions)
+- [API Endpoints](#api-endpoints)
+- [Folder Structure](#folder-structure)
+- [Testing](#testing)
 
-### User Interface
+## Technologies Used
 
-The user-friendly interface includes the following components:
-- **Task Form**: A form to create a new task with fields for title, description, and status.
-- **Task List**: A list of tasks with the ability to update the status or delete a task.
-- **Status Filter**: A dropdown to filter tasks by status (e.g., "All," "To Do," "In Progress," "Done").
+### Frontend
+- React
+- TypeScript
+- Tailwind CSS
+- Axios
+- React Router
+- React Toastify for notifications
 
-### User Experience
+### Backend
+- Node.js
+- Express.js
+- TypeScript
+- PostgreSQL
+- Prisma ORM
+- JWT for authentication
+- Bcrypt for password hashing
 
-- **Form Validation**: Ensures that tasks cannot be created without a title.
-- **Modern Technologies**: Implemented using React.
-- **Styling**: Styled using Tailwind CSS for modern, responsive design.
-- **Responsive Design**: Ensures the application works well on both desktop and mobile devices.
+## Features
 
-## Back-End
+### Frontend
+- User-friendly interface for managing tasks
+- Form for creating new tasks
+- List of tasks with the ability to update or delete tasks
+- Filter tasks by status
+- Responsive design for both desktop and mobile devices
+- Authentication pages (login and register)
+- Persist user session with cookies
 
-### API Development
-
-- **RESTful API**: Handles the CRUD operations for tasks.
-- **Back-End Technology**: Built using Node.js with Express.
-
-### Data Storage
-
-- **Database**: PostgreSQL used to store task data.
-- **Data Models**: Set up necessary models to represent tasks.
-
-### Validation and Error Handling
-
-- **Server-Side Validation**: Ensures that task data is valid before saving it to the database.
-- **Error Handling**: Properly handles errors, including sending appropriate error messages and status codes in response.
-
-## General
-
-### Code Quality
-
-- **Clean Code**: Written in a clean, well-documented, and maintainable manner.
-- **Best Practices**: Uses coding best practices and conventions for JavaScript and React.
-
-### Version Control
-
-- **Git**: Version control system used to track changes in the code.
-
-### Testing
-
-- **Unit Tests**: Written for critical parts of the application, such as API endpoints and data validation.
-
-### Security
-
-- **Basic Security Measures**: Implemented to protect the application from common vulnerabilities.
-
-## Bonus Features
-
-- **User Authentication**: Implemented to restrict access to tasks.
-- **Task Sorting and Searching**: Capabilities to sort and search tasks.
-- **Additional Features**: Task due dates and reminders, user profiles with avatars.
+### Backend
+- RESTful API for managing tasks
+- User authentication with JWT
+- CRUD operations for tasks
+- Server-side validation for task data
+- Error handling
 
 ## Setup Instructions
 
 ### Prerequisites
+- Node.js (v14 or higher)
+- PostgreSQL
 
-- **Node.js**: Ensure Node.js is installed.
-- **PostgreSQL**: Ensure PostgreSQL is installed and running.
+### Frontend Setup
 
-### Installation
+1. Navigate to the frontend directory:
+   ```sh
+   cd task-manager/frontend
+   ```
 
-1. **Clone the repository**:
-    ```sh
-    git clone https://github.com/your-repo/task-manager.git
-    cd task-manager
-    ```
+2. Install the dependencies:
+   ```sh
+   npm install
+   ```
 
-2. **Set up the environment variables** for both `frontend` and `backend`:
-    - Create a `.env` file in the `backend` directory with the following content:
-        ```
-        JWT_SECRET=your_jwt_secret
-        DB_URL=postgres://user:password@localhost:5432/taskmanager
-        ```
-    - Create a `.env` file in the `frontend` directory with the following content:
-        ```
-        REACT_APP_API_URL=http://localhost:5000
-        ```
+3. Create a `.env` file in the `frontend` directory and add your environment variables:
+   ```env
+   REACT_APP_API_URL=http://localhost:5000
+   ```
 
-3. **Install dependencies**:
-    - For the backend:
-      ```sh
-      cd backend
-      npm install
-      ```
-    - For the frontend:
-      ```sh
-      cd ../frontend
-      npm install
-      ```
+4. Start the development server:
+   ```sh
+   npm start
+   ```
 
-4. **Set up the database**:
-    - Create a new PostgreSQL database named `taskmanager`.
-    - Run the migrations to set up the database schema:
-      ```sh
-      cd ../backend
-      npx prisma migrate deploy
-      ```
+### Backend Setup
 
-5. **Start the servers**:
-    - For the backend:
-      ```sh
-      npm run start
-      ```
-    - For the frontend:
-      ```sh
-      cd ../frontend
-      npm start
-      ```
+1. Navigate to the backend directory:
+   ```sh
+   cd task-manager/backend
+   ```
 
-### Running Tests
+2. Install the dependencies:
+   ```sh
+   npm install
+   ```
 
-- **Run unit tests**:
-    ```sh
-    cd backend
-    npm test
-    ```
+3. Create a `.env` file in the `backend` directory and add your environment variables:
+   ```env
+   DATABASE_URL=postgresql://user:password@localhost:5432/taskmanager
+   JWT_SECRET=your_jwt_secret
+   ```
 
-### Usage
+4. Migrate the database schema:
+   ```sh
+   npx prisma migrate dev --name init
+   ```
 
-- **Access the application**: Open `http://localhost:3000` in your browser.
-- **Register/Login**: Create a new account or log in to an existing account.
-- **Manage Tasks**: Create, update, delete, and filter tasks.
+5. Start the development server:
+   ```sh
+   npm run dev
+   ```
 
-## Notes
+## Assumptions
 
-- **Improvement Suggestions**: Additional features like real-time updates, notifications, and more sophisticated error handling can be added.
-- **Known Issues**: None reported at the time of submission.
+During the design and implementation of this task management application, the following assumptions were made:
+
+1. **Authentication**:
+   - Users need to be authenticated to access the task management features.
+   - JWT (JSON Web Token) is used for user authentication, and tokens are stored in cookies for maintaining session state.
+
+2. **Task Management**:
+   - Each task has a title, description, and status (e.g., "To Do," "In Progress," "Done").
+   - A task must have a valid title and status before it can be created.
+   - Users can filter tasks based on their status.
+   - Tasks are associated with the user who created them, and only authenticated users can manage their tasks.
+
+3. **Error Handling**:
+   - Basic error handling is implemented to return appropriate status codes and messages for invalid requests.
+   - Validation errors are handled both on the client-side (form validation) and server-side (API validation).
+
+4. **Security**:
+   - Basic security measures are implemented, such as HTTP-only cookies for storing JWT tokens and server-side validation to prevent common vulnerabilities.
+   - Passwords are hashed before storing in the database to enhance security.
+
+5. **Routing**:
+   - The application has a default route (`/`) that shows all tasks for authenticated users and redirects unauthenticated users to the login page.
+   - The `/login` route is used for user authentication, and `/register` for new user registration.
+   - The `/tasks/new` route is used to create new tasks.
+
+6. **Environment Variables**:
+   - Environment variables are used to configure API URLs and database connections.
+   - `.env` files are used to manage these variables in both frontend and backend directories.
+
+7. **Technology Stack**:
+   - The frontend is built using React and styled with Tailwind CSS for a responsive and modern design.
+   - The backend is built using Node.js and Express, with PostgreSQL as the database.
+
+8. **User Experience**:
+   - The application is designed to be user-friendly with a simple and intuitive interface.
+   - Smooth and responsive user interactions are prioritized, including form validation and error messages.
+
+## API Endpoints
+
+### Auth Endpoints
+- `POST /v1/auth/register` - Register a new user
+- `POST /v1/auth/login` - Login a user
+- `GET /v1/auth/me` - Get the current authenticated user
+
+### Task Endpoints
+- `GET /v1/tasks` - Get all tasks
+- `POST /v1/tasks` - Create a new task
+- `PUT /v1/tasks/:id` - Update a task
+- `DELETE /v1/tasks/:id` - Delete a task
+
+## Folder Structure
+
+```
+task-manager/
+│
+├── frontend/
+│   ├── src/
+│   │   ├── components/
+│   │   ├── context/
+│   │   ├── pages/
+│   │   ├── App.tsx
+│   │   ├── index.tsx
+│   │   └── ...
+│   ├── public/
+│   ├── .env
+│   ├── package.json
+│   └── ...
+│
+├── backend/
+│   ├── src/
+│   │   ├── controllers/
+│   │   ├── models/
+│   │   ├── routes/
+│   │   ├── server.ts
+│   │   └── ...
+│   ├── prisma/
+│   │   ├── schema.prisma
+│   │   └── ...
+│   ├── .env
+│   ├── package.json
+│   └── ...
+│
+└── README.md
+```
+
+## Testing
+
+### Frontend Testing
+To run the frontend tests:
+```sh
+cd task-manager/frontend
+npm test
+```
+
+### Backend Testing
+To run the backend tests:
+```sh
+cd task-manager/backend
+npm test
+```
+
+This project implements basic unit tests to ensure the functionality of critical parts of the application.
+
+## Conclusion
+
+This task management application demonstrates a full-stack implementation using modern web development technologies. It provides user authentication, task management features, and a responsive user interface. For any questions or further clarifications, please refer to the code documentation or contact the project maintainers.
